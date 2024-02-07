@@ -1,0 +1,32 @@
+    --root-color-red-violet-50: #f9ebf9;
+    --root-color-red-violet-100: #ebc2ed;
+    --root-color-red-violet-200: #e2a5e4;
+    --root-color-red-violet-300: #d57cd7;
+    --root-color-red-violet-400: #cd62d0;
+    --root-color-red-violet-500: #c03bc4;
+    --root-color-red-violet-600: #af36b2;
+    --root-color-red-violet-700: #882a8b;
+    --root-color-red-violet-800: #6a206c;
+    --root-color-red-violet-900: #411443;
+
+    --root-color-purple-50: #f3eff9;
+    --root-color-purple-100: #d9ceed;
+    --root-color-purple-200: #c7b6e4;
+    --root-color-purple-300: #ae95d8;
+    --root-color-purple-400: #9e81d1;
+    --root-color-purple-500: #8661c5;
+    --root-color-purple-600: #7a58b3;
+    --root-color-purple-700: #5f458c;
+    --root-color-purple-800: #4a356c;
+    --root-color-purple-900: #2e2143;
+
+    --root-color-lilac-50: #fbf5fb;
+    --root-color-lilac-100: #f2e1f3;
+    --root-color-lilac-200: #ecd2ed;
+    --root-color-lilac-300: #e3bee4;
+    --root-color-lilac-400: #ddb1df;
+    --root-color-lilac-500: #d59ed7;
+    --root-color-lilac-600: #c290c4;
+    --root-color-lilac-700: #977099;
+    --root-color-lilac-800: #755776;
+    --root-color-lilac-900: #483649;
