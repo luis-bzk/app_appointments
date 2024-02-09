@@ -12,7 +12,7 @@ import {ModalComponent} from './src/presentation';
 function App(): React.JSX.Element {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const toggleShowMenu = () => setShowModal(state => !state);
+  const toggleShowMenu = (value: boolean) => setShowModal(value);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,11 +23,14 @@ function App(): React.JSX.Element {
         </Text>
       </View>
 
-      <Pressable style={styles.button} onPress={toggleShowMenu}>
+      <Pressable style={styles.button} onPress={() => toggleShowMenu(true)}>
         <Text style={styles.button_text}>Nueva cita</Text>
       </Pressable>
 
-      <ModalComponent showModal={showModal} closeModal={toggleShowMenu} />
+      <ModalComponent
+        showModal={showModal}
+        closeModal={() => toggleShowMenu(false)}
+      />
     </SafeAreaView>
   );
 }
