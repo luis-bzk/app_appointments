@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Modal,
   Pressable,
@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import {InputComponent} from '.';
+import {Appointment} from '../domain/entities';
 
 interface Props {
   showModal: boolean;
@@ -19,6 +20,21 @@ export function ModalComponent({
   showModal,
   closeModal,
 }: Props): React.JSX.Element {
+  const [appointment, setAppointment] = useState<Appointment>({
+    patientName: '',
+    ownerName: '',
+    ownerPhone: '',
+    ownerMail: '',
+    symptoms: '',
+  });
+
+  const setValueAppointment = (field: keyof Appointment, value: string) => {
+    setAppointment(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
   return (
     <Modal animationType="slide" visible={showModal}>
       <SafeAreaView style={styles.container}>
@@ -36,67 +52,50 @@ export function ModalComponent({
               label="Nombre paciente"
               keyboardType="default"
               inputPlaceholder="Cheese Burger"
+              value={appointment.patientName}
+              setValue={(value: string) =>
+                setValueAppointment('patientName', value)
+              }
             />
 
             <InputComponent
               label="Nombre propietario"
               keyboardType="default"
               inputPlaceholder="Ej. Juan Alvarez"
+              value={appointment.ownerName}
+              setValue={(value: string) =>
+                setValueAppointment('ownerName', value)
+              }
             />
 
             <InputComponent
               label="Email propietario"
               keyboardType="email-address"
               inputPlaceholder="Ej. juana@gmail.com"
+              value={appointment.ownerMail}
+              setValue={(value: string) =>
+                setValueAppointment('ownerMail', value)
+              }
             />
 
             <InputComponent
               label="Teléfono propietario"
               keyboardType="number-pad"
               inputPlaceholder="Ej. 087654321"
+              value={appointment.ownerPhone}
+              setValue={(value: string) =>
+                setValueAppointment('ownerPhone', value)
+              }
             />
 
             <InputComponent
               label="Síntomas paciente "
               keyboardType="default"
               inputPlaceholder="Ej. Tiene un dolor en el..."
-            />
-
-            {/* asdadas asdssssssssssssss*/}
-            <InputComponent
-              label="Síntomas paciente "
-              keyboardType="default"
-              inputPlaceholder="Ej. Tiene un dolor en el..."
-            />
-            <InputComponent
-              label="Síntomas paciente "
-              keyboardType="default"
-              inputPlaceholder="Ej. Tiene un dolor en el..."
-            />
-            <InputComponent
-              label="Síntomas paciente "
-              keyboardType="default"
-              inputPlaceholder="Ej. Tiene un dolor en el..."
-            />
-            <InputComponent
-              label="Síntomas paciente "
-              keyboardType="default"
-              inputPlaceholder="Ej. Tiene un dolor en el..."
-            />
-            <InputComponent
-              label="Síntomas paciente "
-              keyboardType="default"
-              inputPlaceholder="Ej. Tiene un dolor en el..."
-            />
-            <InputComponent
-              label="Síntomas paciente "
-              keyboardType="default"
-              inputPlaceholder="Ej. Tiene un dolor en el..."
-            />
-            <InputComponent
-              label="Síntomas paciente "
-              keyboardType="default"
-              inputPlaceholder="Ej. Tiene un dolor en el..."
+              value={appointment.symptoms}
+              setValue={(value: string) =>
+                setValueAppointment('symptoms', value)
+              }
             />
           </View>
         </ScrollView>

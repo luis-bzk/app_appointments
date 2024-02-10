@@ -11,12 +11,16 @@ interface Props {
   label: string;
   inputPlaceholder: string;
   keyboardType: KeyboardTypeOptions;
+  value: string;
+  setValue: (val: string) => void;
 }
 
 export function InputComponent({
   label,
   keyboardType,
   inputPlaceholder,
+  value,
+  setValue,
 }: Props): React.JSX.Element {
   return (
     <View>
@@ -26,6 +30,8 @@ export function InputComponent({
         keyboardType={keyboardType}
         placeholder={inputPlaceholder}
         placeholderTextColor={'#755776'}
+        value={value}
+        onChangeText={setValue}
       />
     </View>
   );
