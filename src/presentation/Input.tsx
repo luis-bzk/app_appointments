@@ -13,6 +13,11 @@ interface Props {
   keyboardType: KeyboardTypeOptions;
   value: string;
   setValue: (val: string) => void;
+  multiLine?: boolean;
+  numLines?: number;
+  alignVertical?: 'auto' | 'center' | 'top' | 'bottom' | undefined;
+  alignHorizontal?: 'center' | 'left' | 'right' | undefined;
+  maxLength?: number | undefined;
 }
 
 export function InputComponent({
@@ -21,17 +26,27 @@ export function InputComponent({
   inputPlaceholder,
   value,
   setValue,
+  multiLine = false,
+  numLines = 1,
+  alignVertical = 'center',
+  alignHorizontal = 'left',
+  maxLength = undefined,
 }: Props): React.JSX.Element {
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, multiLine && styles.textArea]}
         keyboardType={keyboardType}
         placeholder={inputPlaceholder}
-        placeholderTextColor={'#755776'}
+        placeholderTextColor={'#747474'}
         value={value}
         onChangeText={setValue}
+        multiline={multiLine}
+        numberOfLines={numLines}
+        textAlignVertical={alignVertical}
+        textAlign={alignHorizontal}
+        maxLength={maxLength}
       />
     </View>
   );
@@ -44,9 +59,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f8fafc',
     borderRadius: 10,
     paddingHorizontal: 15,
-    fontSize: 16,
+    fontSize: 18,
+  },
+  textArea: {
+    height: 100,
   },
 });

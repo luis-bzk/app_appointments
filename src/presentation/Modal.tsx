@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+
 import {
   Modal,
   Pressable,
@@ -7,32 +8,84 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
 } from 'react-native';
-import {InputComponent} from '.';
+import {InputComponent, InputDateComponent} from '.';
 import {Appointment} from '../domain/entities';
 
 interface Props {
   showModal: boolean;
   closeModal: () => void;
+  addNewAppointment: (appointment: Appointment) => void;
 }
 
 export function ModalComponent({
   showModal,
   closeModal,
+  addNewAppointment,
 }: Props): React.JSX.Element {
   const [appointment, setAppointment] = useState<Appointment>({
+    id: Date.now().toString(),
     patientName: '',
     ownerName: '',
     ownerPhone: '',
     ownerMail: '',
     symptoms: '',
+    date: new Date(),
   });
 
-  const setValueAppointment = (field: keyof Appointment, value: string) => {
+  const setValueAppointment = (
+    field: keyof Appointment,
+    value: string | Date,
+  ) => {
     setAppointment(prevState => ({
       ...prevState,
       [field]: value,
     }));
+  };
+
+  const handleNewAppointment = () => {
+    if (!appointment.patientName) {
+      Alert.alert('Error', 'El nombre del paciente es requerido');
+      return;
+    }
+
+    if (!appointment.ownerName) {
+      Alert.alert('Error', 'El nombre del propietario es requerido');
+      return;
+    }
+
+    if (!appointment.ownerPhone) {
+      Alert.alert('Error', 'El teléfono del propietario es requerido');
+      return;
+    }
+
+    if (!appointment.ownerMail) {
+      Alert.alert('Error', 'El email del propietario es requerido');
+      return;
+    }
+
+    if (!appointment.symptoms) {
+      Alert.alert('Error', 'Los síntomas del paciente es requerido');
+      return;
+    }
+
+    if (!appointment.date) {
+      Alert.alert('Error', 'La fecha de l;a cita es requerida');
+      return;
+    }
+
+    addNewAppointment(appointment);
+    setAppointment({
+      id: '',
+      patientName: '',
+      ownerName: '',
+      ownerPhone: '',
+      ownerMail: '',
+      symptoms: '',
+      date: new Date(),
+    });
+    closeModal();
   };
 
   return (
@@ -86,6 +139,7 @@ export function ModalComponent({
               setValue={(value: string) =>
                 setValueAppointment('ownerPhone', value)
               }
+              maxLength={10}
             />
 
             <InputComponent
@@ -96,8 +150,20 @@ export function ModalComponent({
               setValue={(value: string) =>
                 setValueAppointment('symptoms', value)
               }
+              multiLine={true}
+              numLines={4}
+              alignVertical="top"
+            />
+            <InputDateComponent
+              label="Fecha"
+              value={appointment.date}
+              setValue={(value: Date) => setValueAppointment('date', value)}
             />
           </View>
+
+          <Pressable style={styles.button_save} onPress={handleNewAppointment}>
+            <Text style={styles.button_save_close}>Guardar</Text>
+          </Pressable>
         </ScrollView>
       </SafeAreaView>
     </Modal>
@@ -107,9 +173,9 @@ export function ModalComponent({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingVertical: 10,
     flex: 1,
-    backgroundColor: '#4a356c',
+    backgroundColor: '#818cf8',
   },
   navigation_bar: {
     flexDirection: 'row',
@@ -119,22 +185,34 @@ const styles = StyleSheet.create({
   },
   header_text: {
     fontWeight: '500',
-    fontSize: 20,
+    fontSize: 24,
     color: '#ffffff',
   },
   button_close: {
     borderRadius: 5,
-    backgroundColor: '#f3eff9',
     paddingHorizontal: 20,
     paddingVertical: 8,
   },
   button_text_close: {
-    color: '#000000',
+    color: '#ffffff',
     fontWeight: '500',
     fontSize: 15,
     textAlign: 'center',
   },
   form: {
     gap: 20,
+    marginBottom: 30,
+  },
+  button_save: {
+    borderRadius: 5,
+    backgroundColor: '#eef2ff',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  button_save_close: {
+    color: '#4f46e5',
+    fontWeight: '500',
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
