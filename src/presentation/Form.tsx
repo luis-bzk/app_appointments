@@ -14,15 +14,15 @@ import {InputComponent, InputDateComponent} from '.';
 import {Appointment} from '../domain/entities';
 
 interface Props {
-  showModal: boolean;
-  closeModal: () => void;
+  showForm: boolean;
+  closeForm: () => void;
   handleSetAppointment: (appointment: Appointment) => void;
   appointmentObj: Appointment;
 }
 
-export function ModalComponent({
-  showModal,
-  closeModal,
+export function FormComponent({
+  showForm: showModal,
+  closeForm: closeModal,
   handleSetAppointment: addNewAppointment,
   appointmentObj,
 }: Props): React.JSX.Element {
@@ -122,7 +122,7 @@ export function ModalComponent({
             <InputComponent
               label="Nombre paciente"
               keyboardType="default"
-              inputPlaceholder="Cheese Burger"
+              inputPlaceholder="Ej. Cheese Burger"
               value={appointment.patientName}
               setValue={(value: string) =>
                 setValueAppointment('patientName', value)
@@ -180,7 +180,9 @@ export function ModalComponent({
           </View>
 
           <Pressable style={styles.button_save} onPress={handleSetAppointment}>
-            <Text style={styles.button_save_close}>Guardar</Text>
+            <Text style={styles.button_save_close}>
+              {appointmentObj.id ? 'Actualizar' : 'Guardar'}
+            </Text>
           </Pressable>
         </ScrollView>
       </SafeAreaView>

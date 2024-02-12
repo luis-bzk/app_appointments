@@ -14,11 +14,16 @@ import {
   Text,
   View,
 } from 'react-native';
-import {AppointmentsListComponent, ModalComponent} from './src/presentation';
+import {
+  AppointmentComponent,
+  AppointmentsListComponent,
+  FormComponent,
+} from './src/presentation';
 import {Appointment} from './src/domain/entities';
 
 function App(): React.JSX.Element {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [showAppointment, setShowAppointment] = useState<boolean>(false);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [appointment, setAppointment] = useState<Appointment>({
     id: '',
@@ -30,7 +35,7 @@ function App(): React.JSX.Element {
     date: new Date(),
   });
 
-  const toggleShowMenu = (value: boolean) => {
+  const clearAppointmentState = () => {
     setAppointment({
       id: '',
       patientName: '',
@@ -40,9 +45,9 @@ function App(): React.JSX.Element {
       symptoms: '',
       date: new Date(),
     });
-    setShowModal(value);
   };
 
+  // appointment operations
   const handleSetAppointment = (newAppointment: Appointment) => {
     const exists = appointments.find(item => item.id === newAppointment.id);
     if (exists) {
@@ -56,15 +61,54 @@ function App(): React.JSX.Element {
     setAppointments([...appointments, newAppointment]);
   };
 
+  const handleDeleteAppointment = (id: string) => {
+    Alert.alert(
+      'Deseas eliminar esta cita?',
+      'Una vez la cita es eliminada no se puede recuperar',
+      [
+        {text: 'Cancelar'},
+        {
+          text: 'Si, eliminar',
+          onPress: () => {
+            const updatedAppointments = appointments.filter(
+              item => !(item.id === id),
+            );
+            setAppointments(updatedAppointments);
+          },
+        },
+      ],
+    );
+  };
+
+  // open modals
   const editAppointment = (id: string) => {
-    const appointmentEdit = appointments.find(item => item.id === id);
-    if (!appointmentEdit) {
+    selectAppointment(id);
+    setShowForm(true);
+  };
+
+  const handleShowAppointment = (id: string) => {
+    selectAppointment(id);
+    setShowAppointment(true);
+  };
+
+  const selectAppointment = (id: string) => {
+    const appointmentSelected = appointments.find(item => item.id === id);
+    if (!appointmentSelected) {
       Alert.alert('Error', 'El elemento seleccionado no existe');
       return;
     }
+    setAppointment(appointmentSelected);
+  };
 
-    setAppointment(appointmentEdit);
-    setShowModal(true);
+  // Close modal
+  const toggleShowForm = (value: boolean) => {
+    clearAppointmentState();
+    setShowForm(value);
+  };
+
+  const toggleShowAppointment = (value: boolean) => {
+    clearAppointmentState();
+    setShowAppointment(value);
   };
 
   return (
@@ -76,20 +120,32 @@ function App(): React.JSX.Element {
         </Text>
       </View>
 
-      <Pressable style={styles.button} onPress={() => toggleShowMenu(true)}>
+      <Pressable style={styles.button} onPress={() => toggleShowForm(true)}>
         <Text style={styles.button_text}>Nueva cita</Text>
       </Pressable>
 
-      <ModalComponent
-        showModal={showModal}
-        closeModal={() => toggleShowMenu(false)}
-        handleSetAppointment={handleSetAppointment}
-        appointmentObj={appointment}
-      />
+      {showForm && (
+        <FormComponent
+          showForm={showForm}
+          closeForm={() => toggleShowForm(false)}
+          handleSetAppointment={handleSetAppointment}
+          appointmentObj={appointment}
+        />
+      )}
+
+      {showAppointment && (
+        <AppointmentComponent
+          showAppointmentModal={showAppointment}
+          closeAppointment={() => toggleShowAppointment(false)}
+          appointment={appointment}
+        />
+      )}
 
       <AppointmentsListComponent
         appointments={appointments}
         editAppointment={editAppointment}
+        selectAppointment={handleShowAppointment}
+        deleteAppointment={handleDeleteAppointment}
       />
     </SafeAreaView>
   );

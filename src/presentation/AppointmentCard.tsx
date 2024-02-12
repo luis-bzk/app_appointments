@@ -1,66 +1,56 @@
 import React from 'react';
 import {Appointment} from '../domain/entities';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {formatDate, getHour} from '../domain/utils';
 
 interface Props {
   appointment: Appointment;
+  selectAppointment: (id: string) => void;
   editAppointment: (id: string) => void;
+  deleteAppointment: (id: string) => void;
 }
 
 export function AppointmentCardComponent({
   appointment,
   editAppointment,
+  deleteAppointment,
+  selectAppointment,
 }: Props): React.JSX.Element {
-  const formatDate = (date: Date): string => {
-    const newDate = new Date(date);
-
-    return newDate.toLocaleDateString('es-Es', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const getHour = (date: Date): string => {
-    const newDate = new Date(date);
-
-    return newDate.toLocaleTimeString('es-Es', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    });
-  };
   return (
-    <View style={styles.container}>
-      <Text style={styles.detail}>
-        Paciente: <Text style={styles.patient}>{appointment.patientName}</Text>
-      </Text>
+    <Pressable onPress={() => selectAppointment(appointment.id)}>
+      <View style={styles.container}>
+        <Text style={styles.detail}>
+          Paciente:{' '}
+          <Text style={styles.patient}>{appointment.patientName}</Text>
+        </Text>
 
-      <Text style={styles.detail}>
-        Propietario:{' '}
-        <Text style={styles.detail_value}>{appointment.ownerName}</Text>
-      </Text>
+        <Text style={styles.detail}>
+          Propietario:{' '}
+          <Text style={styles.detail_value}>{appointment.ownerName}</Text>
+        </Text>
 
-      <Text style={styles.detail}>
-        Hora:{' '}
-        <Text style={styles.detail_value}>{getHour(appointment.date)}</Text>
-      </Text>
+        <Text style={styles.detail}>
+          Hora:{' '}
+          <Text style={styles.detail_value}>{getHour(appointment.date)}</Text>
+        </Text>
 
-      <Text style={styles.date}>{formatDate(appointment.date)}</Text>
+        <Text style={styles.date}>{formatDate(appointment.date)}</Text>
 
-      <View style={styles.buttons}>
-        <Pressable
-          style={styles.button}
-          onPress={() => editAppointment(appointment.id)}>
-          <Text style={[styles.text_button, styles.edit]}>Editar</Text>
-        </Pressable>
+        <View style={styles.buttons}>
+          <Pressable
+            style={styles.button}
+            onPress={() => editAppointment(appointment.id)}>
+            <Text style={[styles.text_button, styles.edit]}>Editar</Text>
+          </Pressable>
 
-        <Pressable style={styles.button}>
-          <Text style={[styles.text_button, styles.delete]}>Eliminar</Text>
-        </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => deleteAppointment(appointment.id)}>
+            <Text style={[styles.text_button, styles.delete]}>Eliminar</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
