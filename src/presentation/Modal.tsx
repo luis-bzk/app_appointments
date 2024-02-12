@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   Modal,
@@ -16,16 +16,18 @@ import {Appointment} from '../domain/entities';
 interface Props {
   showModal: boolean;
   closeModal: () => void;
-  addNewAppointment: (appointment: Appointment) => void;
+  handleSetAppointment: (appointment: Appointment) => void;
+  appointmentObj: Appointment;
 }
 
 export function ModalComponent({
   showModal,
   closeModal,
-  addNewAppointment,
+  handleSetAppointment: addNewAppointment,
+  appointmentObj,
 }: Props): React.JSX.Element {
   const [appointment, setAppointment] = useState<Appointment>({
-    id: Date.now().toString(),
+    id: '',
     patientName: '',
     ownerName: '',
     ownerPhone: '',
@@ -33,6 +35,12 @@ export function ModalComponent({
     symptoms: '',
     date: new Date(),
   });
+
+  useEffect(() => {
+    if (appointmentObj.id) {
+      setAppointment(appointmentObj);
+    }
+  }, [appointmentObj]);
 
   const setValueAppointment = (
     field: keyof Appointment,
@@ -44,7 +52,7 @@ export function ModalComponent({
     }));
   };
 
-  const handleNewAppointment = () => {
+  const handleSetAppointment = () => {
     if (!appointment.patientName) {
       Alert.alert('Error', 'El nombre del paciente es requerido');
       return;
@@ -75,7 +83,16 @@ export function ModalComponent({
       return;
     }
 
-    addNewAppointment(appointment);
+    if (appointmentObj.id) {
+      addNewAppointment(appointment);
+    } else {
+      addNewAppointment({...appointment, id: Date.now().toString()});
+    }
+
+    closeClearModal();
+  };
+
+  const closeClearModal = () => {
     setAppointment({
       id: '',
       patientName: '',
@@ -85,6 +102,7 @@ export function ModalComponent({
       symptoms: '',
       date: new Date(),
     });
+
     closeModal();
   };
 
@@ -95,7 +113,7 @@ export function ModalComponent({
           <View style={styles.navigation_bar}>
             <Text style={styles.header_text}>Nueva cita</Text>
 
-            <Pressable style={styles.button_close} onPress={closeModal}>
+            <Pressable style={styles.button_close} onPress={closeClearModal}>
               <Text style={styles.button_text_close}>Cerrar</Text>
             </Pressable>
           </View>
@@ -161,7 +179,7 @@ export function ModalComponent({
             />
           </View>
 
-          <Pressable style={styles.button_save} onPress={handleNewAppointment}>
+          <Pressable style={styles.button_save} onPress={handleSetAppointment}>
             <Text style={styles.button_save_close}>Guardar</Text>
           </Pressable>
         </ScrollView>

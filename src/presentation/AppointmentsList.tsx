@@ -5,10 +5,12 @@ import {AppointmentCardComponent} from './AppointmentCard';
 
 interface Props {
   appointments: Appointment[];
+  editAppointment: (id: string) => void;
 }
 
 export function AppointmentsListComponent({
   appointments,
+  editAppointment,
 }: Props): React.JSX.Element {
   return appointments.length === 0 ? (
     <Text style={styles.alert}>Todavía no tienes citas agendadas</Text>
@@ -17,7 +19,12 @@ export function AppointmentsListComponent({
       style={styles.list}
       data={appointments}
       keyExtractor={item => item.id}
-      renderItem={item => <AppointmentCardComponent appointment={item.item} />}
+      renderItem={item => (
+        <AppointmentCardComponent
+          appointment={item.item}
+          editAppointment={editAppointment}
+        />
+      )}
     />
   );
 }

@@ -6,18 +6,65 @@
  */
 
 import React, {useState} from 'react';
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {AppointmentsListComponent, ModalComponent} from './src/presentation';
 import {Appointment} from './src/domain/entities';
 
 function App(): React.JSX.Element {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [appointments, setAppointment] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointment, setAppointment] = useState<Appointment>({
+    id: '',
+    patientName: '',
+    ownerName: '',
+    ownerPhone: '',
+    ownerMail: '',
+    symptoms: '',
+    date: new Date(),
+  });
 
-  const toggleShowMenu = (value: boolean) => setShowModal(value);
+  const toggleShowMenu = (value: boolean) => {
+    setAppointment({
+      id: '',
+      patientName: '',
+      ownerName: '',
+      ownerPhone: '',
+      ownerMail: '',
+      symptoms: '',
+      date: new Date(),
+    });
+    setShowModal(value);
+  };
 
-  const addNewAppointment = (appointment: Appointment) => {
-    setAppointment([...appointments, appointment]);
+  const handleSetAppointment = (newAppointment: Appointment) => {
+    const exists = appointments.find(item => item.id === newAppointment.id);
+    if (exists) {
+      const updatedAppointments = appointments.map(item =>
+        item.id === newAppointment.id ? newAppointment : item,
+      );
+      setAppointments(updatedAppointments);
+      return;
+    }
+
+    setAppointments([...appointments, newAppointment]);
+  };
+
+  const editAppointment = (id: string) => {
+    const appointmentEdit = appointments.find(item => item.id === id);
+    if (!appointmentEdit) {
+      Alert.alert('Error', 'El elemento seleccionado no existe');
+      return;
+    }
+
+    setAppointment(appointmentEdit);
+    setShowModal(true);
   };
 
   return (
@@ -36,10 +83,14 @@ function App(): React.JSX.Element {
       <ModalComponent
         showModal={showModal}
         closeModal={() => toggleShowMenu(false)}
-        addNewAppointment={addNewAppointment}
+        handleSetAppointment={handleSetAppointment}
+        appointmentObj={appointment}
       />
 
-      <AppointmentsListComponent appointments={appointments} />
+      <AppointmentsListComponent
+        appointments={appointments}
+        editAppointment={editAppointment}
+      />
     </SafeAreaView>
   );
 }
